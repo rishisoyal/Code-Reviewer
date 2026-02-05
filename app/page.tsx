@@ -39,9 +39,9 @@ export default function CodeReviewer() {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4  p-6 bg-black text-white">
+      <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 gap-4 p-6 bg-black text-white">
         {/* Left Side: Chat & Input */}
-        <div className="min-h-screen flex flex-col border border-gray-500 rounded-xl bg-gray-950 shadow-sm overflow-hidden">
+        <div className="sm:h-[95vh] max-h-[95vh] flex flex-col border border-gray-500 rounded-xl bg-gray-950 shadow-sm overflow-hidden">
           <div className="flex-1 overflow-y-scroll p-4 space-y-4">
             {messages.map((message) => (
               <div
@@ -123,7 +123,7 @@ export default function CodeReviewer() {
         </div>
 
         {/* Right Side: Agent Process Logs */}
-        <div className="min-h-screen border border-gray-500 rounded-xl bg-slate-900 text-slate-200 shadow-xl overflow-hidden flex flex-col">
+        <div className="sm:h-[95vh] max-h-[95vh]  border border-gray-500 rounded-xl bg-slate-900 text-slate-200 shadow-xl overflow-hidden flex flex-col">
           <div className="p-3 border-b border-slate-700 bg-slate-800 flex items-center gap-2">
             <TbTerminal2 size={20} />
             <span className="text-sm font-mono font-bold uppercase tracking-wider">

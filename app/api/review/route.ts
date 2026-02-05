@@ -1,7 +1,7 @@
 import { convertToModelMessages, streamText, UIMessage, stepCountIs } from "ai";
 import { mistral } from "@ai-sdk/mistral";
 import { runESLint, runInSandbox } from "@/lib/agent/tools";
-import { NextResponse } from "next/server";
+import { NextResponse , NextRequest} from "next/server";
 
 const SYSTEM_MESSAGE = `You are an autonomous Senior Software Engineer.
 
@@ -45,7 +45,7 @@ You MUST act without any user interaction. Execute the following protocol autono
   - After finishing tool execution (success or failure), immediately emit the assistant response.
 `;
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const { messages }: { messages: UIMessage[] } = await req.json();
 

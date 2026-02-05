@@ -13,7 +13,7 @@ export const runInSandbox = tool({
 
     try {
       // prevent creating infinite loops
-      const result = await script.runInContext(context, { timeout: 1000 });
+      const result = await script.runInContext(context, { timeout: 3000 });
       return { success: true, content: result };
     } catch (err: unknown) {
       return { success: false, error: (err as Error).message };
