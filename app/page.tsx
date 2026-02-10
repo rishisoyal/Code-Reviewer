@@ -17,6 +17,9 @@ export default function CodeReviewer() {
   const apiKey = useSettingsStore((s) => s.apiKey);
   const provider = useSettingsStore((s) => s.provider);
   const model = useSettingsStore((s) => s.model);
+  const setModel = useSettingsStore((s) => s.setModel);
+  const setApiKey = useSettingsStore((s) => s.setApiKey);
+  const setProvider = useSettingsStore((s) => s.setProvider);
 
   const apiKeyRef = useRef(apiKey);
   const modelRef = useRef(model);
@@ -28,7 +31,19 @@ export default function CodeReviewer() {
     apiKeyRef.current = apiKey;
   }, [provider, model, apiKey]);
 
-  
+  useEffect(() => {
+    const storedSettings = localStorage.getItem("settings-store");
+    if (!storedSettings) return;
+
+    const settings = JSON.parse(storedSettings) as {
+      state: { model: string; provider: string; apiKey: string };
+    };
+
+    setApiKey(settings.state.apiKey);
+    setModel(settings.state.model);
+    setProvider(settings.state.provider);
+  }, [setApiKey, setModel, setProvider]);
+
   const { messages, sendMessage, status } = useChat({
     // eslint-disable-next-line react-hooks/refs
     transport: new DefaultChatTransport({
@@ -111,9 +126,7 @@ export default function CodeReviewer() {
             onSubmit={(e) => {
               e.preventDefault();
               if (input.trim()) {
-                sendMessage(
-                  { text: input },
-                );
+                sendMessage({ text: input });
                 setInput("");
               }
             }}
