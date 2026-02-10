@@ -1,4 +1,6 @@
+"use client";
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
@@ -9,6 +11,20 @@ interface Props {
 }
 
 export default function Popup({ isOpen, onClose, children }: Props) {
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose]);
+
   if (typeof document === "undefined") return null;
 
   // render in separate DOM
@@ -29,14 +45,14 @@ export default function Popup({ isOpen, onClose, children }: Props) {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{
-              duration: 0.20,
+              duration: 0.2,
               ease: "easeInOut",
             }}
             exit={{ scale: 0.9, opacity: 0 }}
             onClick={onClose}
           >
             <div
-              className="bg-[#DCE0E8] dark:bg-[#11111b] border-2 border-[#45475a] rounded-2xl w-full max-w-max max-h-[90vh] overflow-y-auto p-6"
+              className="bg-[#DCE0E8] dark:bg-[#11111b] border-2 border-[#45475a] rounded-2xl h-full w-full max-w-max max-h-[90vh] overflow-y-auto p-6"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="w-full flex items-center justify-end">

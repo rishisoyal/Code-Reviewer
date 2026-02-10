@@ -6,16 +6,48 @@ import hljs from "highlight.js";
 import "highlight.js/styles/github-dark.css";
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { IoIosAlert } from "react-icons/io";
 import { LuCircleDashed } from "react-icons/lu";
 import { TbTerminal2 } from "react-icons/tb";
+import { useSettingsStore } from "@/store/settingsStore";
 
 export default function CodeReviewer() {
+  const apiKey = useSettingsStore((s) => s.apiKey);
+  const provider = useSettingsStore((s) => s.provider);
+  const model = useSettingsStore((s) => s.model);
+
+  const apiKeyRef = useRef(apiKey);
+  const modelRef = useRef(model);
+  const providerRef = useRef(provider);
+
+  useEffect(() => {
+    providerRef.current = provider;
+    modelRef.current = model;
+    apiKeyRef.current = apiKey;
+  }, [provider, model, apiKey]);
+
+  
   const { messages, sendMessage, status } = useChat({
+    // eslint-disable-next-line react-hooks/refs
     transport: new DefaultChatTransport({
       api: "/api/review",
+      prepareSendMessagesRequest: ({ messages, id }) => {
+        const currentAPIKey = apiKeyRef.current;
+        const currentModel = modelRef.current;
+        const currentProvider = providerRef.current;
+
+        return {
+          body: {
+            messages,
+            id,
+            apiKey: currentAPIKey,
+            model: currentModel,
+            provider: currentProvider,
+          },
+        };
+      },
     }),
   });
 
@@ -41,7 +73,7 @@ export default function CodeReviewer() {
     <>
       <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 gap-4 p-6 bg-black text-white">
         {/* Left Side: Chat & Input */}
-        <div className="sm:h-[95vh] max-h-[95vh] flex flex-col border border-gray-500 rounded-xl bg-gray-950 shadow-sm overflow-hidden">
+        <div className="h-[95vh] max-h-[95vh] flex flex-col border border-gray-500 rounded-xl bg-gray-950 shadow-sm">
           <div className="flex-1 overflow-y-scroll p-4 space-y-4">
             {messages.map((message) => (
               <div
@@ -79,7 +111,9 @@ export default function CodeReviewer() {
             onSubmit={(e) => {
               e.preventDefault();
               if (input.trim()) {
-                sendMessage({ text: input });
+                sendMessage(
+                  { text: input },
+                );
                 setInput("");
               }
             }}
@@ -88,7 +122,7 @@ export default function CodeReviewer() {
           >
             <div className="relative max-w-full">
               <div
-                className="max-w-full min-h-34 h-auto overflow-y-auto text-wrap p-3 border border-gray-500 rounded-lg focus:ring-2 focus:ring-gray-500 outline-none leading-6"
+                className="max-w-full h-34 overflow-y-auto text-wrap p-3 border border-gray-500 rounded-lg focus:ring-2 focus:ring-gray-500 outline-none leading-6"
                 contentEditable={true}
                 role="textbox"
                 aria-multiline={true}
@@ -123,7 +157,7 @@ export default function CodeReviewer() {
         </div>
 
         {/* Right Side: Agent Process Logs */}
-        <div className="sm:h-[95vh] max-h-[95vh]  border border-gray-500 rounded-xl bg-slate-900 text-slate-200 shadow-xl overflow-hidden flex flex-col">
+        <div className="h-[95vh] max-h-[95vh]  border border-gray-500 rounded-xl bg-slate-900 text-slate-200 shadow-xl overflow-hidden flex flex-col">
           <div className="p-3 border-b border-slate-700 bg-slate-800 flex items-center gap-2">
             <TbTerminal2 size={20} />
             <span className="text-sm font-mono font-bold uppercase tracking-wider">
@@ -215,7 +249,13 @@ export default function CodeReviewer() {
                               <div className="text-slate-500 italic">
                                 Tool Input
                               </div>
-                              <pre className="bg-slate-800 p-2 rounded text-xs overflow-x-auto text-slate-300">
+                              <pre
+                                onWheel={(e) => {
+                                  e.preventDefault();
+                                  e.currentTarget.scrollLeft += e.deltaY;
+                                }}
+                                className="bg-slate-800 p-2 rounded text-xs overflow-x-auto text-slate-300 scroll-smooth"
+                              >
                                 {JSON.stringify(toolPart.input, null, 2)}
                               </pre>
 

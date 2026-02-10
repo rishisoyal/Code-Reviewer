@@ -1,9 +1,25 @@
-import { convertToModelMessages, streamText, UIMessage, stepCountIs } from "ai";
-import { mistral } from "@ai-sdk/mistral";
 import { runESLint, runInSandbox } from "@/lib/agent/tools";
-import { NextResponse , NextRequest} from "next/server";
+import { mistral } from "@ai-sdk/mistral";
+import { getModel } from "@/lib/model";
+
+import {
+  convertToModelMessages,
+  stepCountIs,
+  ToolLoopAgent,
+  UIMessage,
+} from "ai";
+import { NextRequest, NextResponse } from "next/server";
 
 const SYSTEM_MESSAGE = `You are an autonomous Senior Software Engineer.
+
+Before Answering the query you must tell the user the AI model being used and by which provider.
+
+You must follow a structured "Chain of Thought" process:
+  1. **Thought**: Analyze the user's request and describe your plan.
+   What do you know? What is missing? Which tool is best?
+  2. **Action**: Choose a tool to call. Use the format: Action: tool_name(argument)
+  3. **Observation**: You will receive the result of that action.
+  4. **Final Answer**: Once you have enough information, provide the final response.
 
 You MUST act without any user interaction. Execute the following protocol autonomously:
 
@@ -36,6 +52,7 @@ You MUST act without any user interaction. Execute the following protocol autono
   - Show tool outputs clearly under each step.
   - Write code in fenced code blocks with language tags.
   - Keep explanations concise and technical.
+  - Use sufficient space and formatting for readability.
 
 9. AUTONOMY RULE
   - Never ask the user for confirmation or input.
@@ -45,15 +62,32 @@ You MUST act without any user interaction. Execute the following protocol autono
   - After finishing tool execution (success or failure), immediately emit the assistant response.
 `;
 
+interface ResponseBody {
+  id: string;
+  messages: UIMessage[];
+  apiKey: string;
+  provider: string;
+  model: string;
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const { messages }: { messages: UIMessage[] } = await req.json();
+    const { id, messages, apiKey, model, provider }: ResponseBody =
+      await req.json();
 
-    const result = streamText({
-      model: mistral("mistral-large-latest"),
-      messages: await convertToModelMessages(messages),
+    // console.log({id, apiKey, provider, model });
+
+    const currentModel =
+      !apiKey || !provider || !model
+        ? mistral("mistral-large-latest")
+        : getModel({ apiKey, model, provider });
+
+    console.log(currentModel.modelId);
+
+    const agent = new ToolLoopAgent({
+      model: currentModel,
+      instructions: SYSTEM_MESSAGE,
       maxRetries: 20, // Allows the "Write -> Fail -> Fix" loop
-      system: SYSTEM_MESSAGE,
       tools: {
         esLint: runESLint,
         sandbox: runInSandbox,
@@ -62,12 +96,16 @@ export async function POST(req: NextRequest) {
       stopWhen: stepCountIs(20),
     });
 
+    const result = await agent.stream({
+      messages: await convertToModelMessages(messages),
+    });
+
     return result.toUIMessageStreamResponse();
-  } catch (err: unknown) {
+  } catch (error: unknown) {
+    console.error({ error });
     return NextResponse.json(
-      { error: (err as Error).message },
+      { error: (error as Error).message },
       { status: 500 },
     );
   }
 }
-

@@ -29,3 +29,7 @@ code{
   text-wrap: wrap;
   border-radius: 6px;
 }
+
+hr{
+  padding: 4px;
+}
