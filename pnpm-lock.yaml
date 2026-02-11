@@ -50,6 +50,9 @@ importers:
       '@next/mdx':
         specifier: ^16.1.6
         version: 16.1.6(@mdx-js/loader@3.1.1)(@mdx-js/react@3.1.1(@types/react@19.2.10)(react@19.2.3))
+      '@nyariv/sandboxjs':
+        specifier: ^0.8.32
+        version: 0.8.32
       '@types/mdx':
         specifier: ^2.0.13
         version: 2.0.13
@@ -65,6 +68,9 @@ importers:
       framer-motion:
         specifier: ^12.31.0
         version: 12.31.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      globals:
+        specifier: ^17.3.0
+        version: 17.3.0
       highlight.js:
         specifier: ^11.11.1
         version: 11.11.1
@@ -754,6 +760,9 @@ packages:
   '@nolyfill/is-core-module@1.0.39':
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
+
+  '@nyariv/sandboxjs@0.8.32':
+    resolution: {integrity: sha512-krGszk+2Un4oVSQrkD7JUodGuEhkdRLbbMY5IqzFjymMPWqNL6dvnTah0N3QLemBFf66GCnmRaVNnSR6nS0eyg==}
 
   '@opentelemetry/api@1.9.0':
     resolution: {integrity: sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==}
@@ -1669,6 +1678,10 @@ packages:
 
   globals@16.4.0:
     resolution: {integrity: sha512-ob/2LcVVaVGCYN+r14cnwnoDPUufjiYgSqRhiFD0Q1iI4Odora5RE8Iv1D24hAz5oMophRGkGz+yuvQmmUMnMw==}
+    engines: {node: '>=18'}
+
+  globals@17.3.0:
+    resolution: {integrity: sha512-yMqGUQVVCkD4tqjOJf3TnrvaaHDMYp4VlUSObbkIiuCPe/ofdMBFIAcBbCSRFWOnos6qRiTVStDwqPLUclaxIw==}
     engines: {node: '>=18'}
 
   globalthis@1.0.4:
@@ -3480,6 +3493,8 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
+  '@nyariv/sandboxjs@0.8.32': {}
+
   '@opentelemetry/api@1.9.0': {}
 
   '@popperjs/core@2.11.8': {}
@@ -4542,6 +4557,8 @@ snapshots:
   globals@14.0.0: {}
 
   globals@16.4.0: {}
+
+  globals@17.3.0: {}
 
   globalthis@1.0.4:
     dependencies:

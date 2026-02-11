@@ -2,6 +2,7 @@ import { Linter } from "eslint";
 import { tool } from "ai";
 import { z } from "zod";
 import tsParser from "@typescript-eslint/parser";
+import globals from 'globals'
 
 export const runESLint = tool({
   description: "Lint the JS code and returns linter errors",
@@ -22,6 +23,11 @@ export const runESLint = tool({
               parser: tsParser,
               ecmaVersion: 2022,
               sourceType: "module",
+              globals: {
+                ...globals.browser,
+                ...globals.node,
+                ...globals.es2021,
+              },
             },
             rules: {
               "no-undef": "error",

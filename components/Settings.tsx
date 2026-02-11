@@ -73,8 +73,12 @@ export default function Settings() {
           <form
             method="post"
             onSubmit={handleSubmit}
-            className="w-[80vw] md:w-2xl flex gap-4 p-4 flex-col"
+            className="w-[80vw] md:w-2xl flex items-center justify-center gap-4 p-4 flex-col"
           >
+            <p className="text-center text-gray-300">
+              Your API key is stored in your browser&#39;s local storage and
+              never on our server.
+            </p>
             <div className="relative w-full flex items-center justify-center">
               <input
                 type={showAPI ? "text" : "password"}
@@ -100,8 +104,12 @@ export default function Settings() {
               sx={{
                 m: 1,
                 minWidth: 120,
+                width: "100%",
                 bgcolor: "black",
                 borderColor: "#62748e",
+                "&.MuiMenu-list": {
+                  bgcolor: "gray"
+                }
               }}
             >
               <InputLabel sx={{ color: "white" }}>Provider</InputLabel>
@@ -156,6 +164,7 @@ export default function Settings() {
               sx={{
                 m: 1,
                 minWidth: 120,
+                width: "100%",
                 bgcolor: "black",
                 borderColor: "#62748e",
               }}
@@ -216,7 +225,7 @@ export default function Settings() {
             <div className="w-full flex justify-center">
               <button
                 type="submit"
-                className="p-2 px-4 cursor-pointer border rounded-2xl hover:bg-white hover:text-black transition-colors duration-300 ease-in-out"
+                className="p-3 px-4 cursor-pointer border rounded-xs hover:bg-white hover:text-black transition-colors duration-300 ease-in-out"
               >
                 Use These Settings
               </button>
