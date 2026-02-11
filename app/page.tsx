@@ -134,35 +134,27 @@ export default function CodeReviewer() {
             id="input-form"
           >
             <div className="relative max-w-full">
-              <div
-                className="max-w-full h-34 overflow-y-auto text-wrap p-3 border border-gray-500 rounded-lg focus:ring-2 focus:ring-gray-500 outline-none leading-6"
-                contentEditable={true}
-                role="textbox"
+              <textarea
+                className="w-full h-34 overflow-y-auto text-wrap p-3 border border-gray-500 rounded-lg focus:ring-2 focus:ring-gray-500 outline-none leading-6 resize-none"
                 aria-multiline={true}
-                inputMode="text"
-                onInput={(e) => {
-                  setInput(e.currentTarget.innerText);
+                value={input}
+                onChange={(e) => {
+                  setInput(e.currentTarget.value);
                 }}
+                placeholder="Write Something..."
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
                     e.currentTarget.closest("form")?.requestSubmit();
-                    e.currentTarget.innerText = "";
                     setInput("");
                   }
                 }}
               />
-
-              {input.trim() === "" && (
-                <span className="pointer-events-none absolute inset-0 p-3 opacity-50">
-                  Write Something...
-                </span>
-              )}
             </div>
             <button
               disabled={status !== "ready"}
               type="submit"
-              className="p-1 px-6 m-2 rounded-xl cursor-pointer bg-gray-900 hover:bg-gray-800 border border-white "
+              className="p-1 px-6 m-2 rounded-[4px] cursor-pointer bg-gray-900 hover:bg-gray-800 border border-white "
             >
               GO
             </button>
