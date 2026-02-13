@@ -83,6 +83,7 @@ export default function CodeReviewer() {
 
   // console.log(messages);
   // console.log(input);
+  // console.log(messages[0].metadata);
 
   return (
     <>
@@ -90,35 +91,40 @@ export default function CodeReviewer() {
         {/* Left Side: Chat & Input */}
         <div className="h-[95vh] max-h-[95vh] flex flex-col border border-gray-500 rounded-xl bg-gray-950 shadow-sm">
           <div className="flex-1 overflow-y-scroll p-4 space-y-4">
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex flex-col ${message.role === "user" ? "align-end" : "w-full"} bg-gray-800 p-4 rounded-2xl`}
-              >
-                <span className="p-2 w-max px-8 rounded-xl bg-gray-900">
-                  {message.role === "user" ? "User" : "AI"}
-                </span>
-                <br />
-                <span className="p-4 w-full">
-                  {message.parts.map((part, index) =>
-                    part.type === "text" ? (
-                      message.role === "user" ? (
-                        <span key={index}>{part.text}</span>
-                      ) : (
-                        <span
-                          key={index}
-                          dangerouslySetInnerHTML={{
-                            __html: marked
-                              .parse(part.text, { gfm: true, breaks: true })
-                              .toString(),
-                          }}
-                        ></span>
-                      )
-                    ) : null,
-                  )}
-                </span>
-              </div>
-            ))}
+            {status !== "error" &&
+              messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex flex-col ${message.role === "user" ? "align-end" : "w-full"} bg-gray-800 p-4 rounded-2xl`}
+                >
+                  <span className="p-2 w-max px-8 rounded-xl bg-gray-900">
+                    {message.role === "user" ? "User" : "AI"}
+                  </span>
+                  <br />
+                  <span className="p-4 w-full">
+                    {message.parts.map((part, index) =>
+                      part.type === "text" ? (
+                        message.role === "user" ? (
+                          <span key={index}>{part.text}</span>
+                        ) : (
+                          <span
+                            key={index}
+                            dangerouslySetInnerHTML={{
+                              __html: marked
+                                .parse(part.text, { gfm: true, breaks: true })
+                                .toString(),
+                            }}
+                          ></span>
+                        )
+                      ) : null,
+                    )}
+                  </span>
+                </div>
+              ))}
+
+            {status === "error" && (
+              <span>Some error occurred, recheck your api</span>
+            )}
           </div>
 
           <form
@@ -154,7 +160,7 @@ export default function CodeReviewer() {
             <button
               disabled={status !== "ready"}
               type="submit"
-              className="p-1 px-6 m-2 rounded-[4px] cursor-pointer bg-gray-900 hover:bg-gray-800 border border-white "
+              className="p-1 px-6 m-2 rounded-sm cursor-pointer bg-gray-900 hover:bg-gray-800 border border-white "
             >
               GO
             </button>

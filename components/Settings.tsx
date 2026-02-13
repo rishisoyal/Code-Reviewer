@@ -139,9 +139,9 @@ export default function Settings() {
                 >
                   None
                 </MenuItem>
-                {providers.map((p, i) => (
+                {providers.map((p) => (
                   <MenuItem
-                    key={i}
+                    key={p.name}
                     value={p.name}
                     sx={{
                       bgcolor: "#1e2939",
@@ -200,9 +200,9 @@ export default function Settings() {
                 </MenuItem>
                 {providers
                   .find((p) => p.name === provider)
-                  ?.models.map((m, j) => (
+                  ?.models.map((m) => (
                     <MenuItem
-                      key={j}
+                      key={m}
                       value={m}
                       sx={{
                         bgcolor: "#1e2939",

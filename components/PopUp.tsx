@@ -52,7 +52,7 @@ export default function Popup({ isOpen, onClose, children }: Props) {
             onClick={onClose}
           >
             <div
-              className="bg-[#DCE0E8] dark:bg-[#11111b] border-2 border-[#45475a] rounded-2xl h-full w-full max-w-max max-h-[90vh] overflow-y-auto p-6"
+              className="bg-[#DCE0E8] dark:bg-[#11111b] border-2 border-[#45475a] rounded-2xl w-full max-w-max max-h-[90vh] overflow-y-auto p-6"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="w-full flex items-center justify-end">

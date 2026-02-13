@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
         ? mistral("mistral-large-latest")
         : getModel({ apiKey, model, provider });
 
-    console.log(currentModel.modelId);
+    console.log("current model: ", currentModel.modelId);
 
     const agent = new ToolLoopAgent({
       model: currentModel,
@@ -102,7 +102,7 @@ export async function POST(req: NextRequest) {
 
     return result.toUIMessageStreamResponse();
   } catch (error: unknown) {
-    console.error({ error });
+    console.error("api error: ", error);
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 500 },
