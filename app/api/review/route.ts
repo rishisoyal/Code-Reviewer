@@ -12,8 +12,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 const SYSTEM_MESSAGE = `You are an autonomous Senior Software Engineer.
 
-Before Answering the query you must tell the user the AI model being used and by which provider.
-
 You must follow a structured "Chain of Thought" process:
   1. **Thought**: Analyze the user's request and describe your plan.
    What do you know? What is missing? Which tool is best?
@@ -109,3 +107,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+

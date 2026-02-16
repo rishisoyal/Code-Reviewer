@@ -1,5 +1,6 @@
 "use client";
 
+import { useSettingsStore } from "@/store/settingsStore";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import hljs from "highlight.js";
@@ -11,7 +12,6 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { IoIosAlert } from "react-icons/io";
 import { LuCircleDashed } from "react-icons/lu";
 import { TbTerminal2 } from "react-icons/tb";
-import { useSettingsStore } from "@/store/settingsStore";
 
 export default function CodeReviewer() {
   const apiKey = useSettingsStore((s) => s.apiKey);
@@ -24,6 +24,7 @@ export default function CodeReviewer() {
   const apiKeyRef = useRef(apiKey);
   const modelRef = useRef(model);
   const providerRef = useRef(provider);
+  const queryInputRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
     providerRef.current = provider;
@@ -43,6 +44,17 @@ export default function CodeReviewer() {
     setModel(settings.state.model);
     setProvider(settings.state.provider);
   }, [setApiKey, setModel, setProvider]);
+
+  useEffect(() => {
+    function handleKeypress(e: globalThis.KeyboardEvent) {
+      if (document.activeElement === queryInputRef.current) return;
+      if (e.key === "/") {
+        e.preventDefault();
+        queryInputRef.current?.focus();
+      }
+    }
+    window.addEventListener("keypress", handleKeypress);
+  }, []);
 
   const { messages, sendMessage, status } = useChat({
     // eslint-disable-next-line react-hooks/refs
@@ -141,6 +153,7 @@ export default function CodeReviewer() {
           >
             <div className="relative max-w-full">
               <textarea
+                ref={queryInputRef}
                 className="w-full h-34 overflow-y-auto text-wrap p-3 border border-gray-500 rounded-lg focus:ring-2 focus:ring-gray-500 outline-none leading-6 resize-none"
                 aria-multiline={true}
                 value={input}
@@ -319,3 +332,4 @@ export default function CodeReviewer() {
     </>
   );
 }
+
